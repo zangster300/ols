@@ -93,10 +93,10 @@ the_basics :: proc() {
 		// Constant literals are “untyped” which means that they can implicitly convert to a type.
 
 		y: int // `y` is typed of type `int`
-		y = 1 // `1` is an untyped integer literal which can implicitly convert to `int`
+		y = 1  // `1` is an untyped integer literal which can implicitly convert to `int`
 
 		z: f64 // `z` is typed of type `f64` (64-bit floating point number)
-		z = 1 // `1` is an untyped integer literal which can be implicitly converted to `f64`
+		z = 1  // `1` is an untyped integer literal which can be implicitly converted to `f64`
 		// No need for any suffixes or decimal places like in other languages
 		// (with the exception of negative zero, which must be given as `-0.0`)
 		// CONSTANTS JUST WORK!!!
@@ -104,7 +104,7 @@ the_basics :: proc() {
 
 		// Assignment statements
 		h: int = 123 // declares a new variable `h` with type `int` and assigns a value to it
-		h = 637 // assigns a new value to `h`
+		h = 637      // assigns a new value to `h`
 
 		// `=` is the assignment operator
 
@@ -493,9 +493,9 @@ explicit_procedure_overloading :: proc() {
 	add(f32(1), f32(2))
 	add(int(1), f32(2), u8(3))
 
-	add(1, 2) // untyped ints coerce to int tighter than f32
+	add(1, 2)     // untyped ints coerce to int tighter than f32
 	add(1.0, 2.0) // untyped floats coerce to f32 tighter than int
-	add(1, 2, 3) // three parameters
+	add(1, 2, 3)  // three parameters
 
 	// Ambiguous answers
 	// add(1.0, 2)
@@ -550,8 +550,8 @@ struct_type :: proc() {
 	{
 		// Structs can tagged with different memory layout and alignment requirements:
 
-		a :: struct #align 4 {} // align to 4 bytes
-		b :: struct #packed {} // remove padding between fields
+		a :: struct #align 4 {}   // align to 4 bytes
+		b :: struct #packed {}    // remove padding between fields
 		c :: struct #raw_union {} // all fields share the same offset (0). This is the same as C's union
 	}
 
@@ -1131,15 +1131,29 @@ parametric_polymorphism :: proc() {
 			return
 		}
 
-		x := [2][3]f32{{1, 2, 3}, {3, 2, 1}}
-		y := [3][2]f32{{0, 8}, {6, 2}, {8, 4}}
+		x := [2][3]f32 {
+			{1, 2, 3},
+			{3, 2, 1},
+		}
+		y := [3][2]f32 {
+			{0, 8},
+			{6, 2},
+			{8, 4},
+		}
 		z := mul(x, y)
 		assert(z == {{36, 24}, {20, 32}})
 	}
 }
 
 
-prefix_table := [?]string{"White", "Red", "Green", "Blue", "Octarine", "Black"}
+prefix_table := [?]string {
+	"White",
+	"Red",
+	"Green",
+	"Blue",
+	"Octarine",
+	"Black",
+}
 
 print_mutex := b64(false)
 
@@ -1231,7 +1245,7 @@ threading_example :: proc() {
 
 
 		for i in 0 ..< 30 {
-			// be mindful of the allocator used for tasks. The allocator needs to be thread safe, or be owned by the task for exclusive use 
+			// be mindful of the allocator used for tasks. The allocator needs to be thread safe, or be owned by the task for exclusive use
 			thread.pool_add_task(
 				pool = &pool,
 				procedure = task_proc,
@@ -1493,8 +1507,8 @@ bit_set_type :: proc() {
 
 		assert(a <= b) // 'a' is a subset of 'b'
 		assert(b >= a) // 'b' is a superset of 'a'
-		assert(a < b) // 'a' is a strict subset of 'b'
-		assert(b > a) // 'b' is a strict superset of 'a'
+		assert(a < b)  // 'a' is a strict subset of 'b'
+		assert(b > a)  // 'b' is a strict superset of 'a'
 
 		assert(!(a < c)) // 'a' is a not strict subset of 'c'
 		assert(!(c > a)) // 'c' is a not strict superset of 'a'
@@ -2463,7 +2477,7 @@ matrix_type :: proc() {
 		fmt.println("r", r)
 	}
 
-	{ 	// Component-wise operations 
+	{ 	// Component-wise operations
 		// if the element type supports it
 		// Not support for '/', '%', or '%%' operations
 
@@ -2500,16 +2514,21 @@ matrix_type :: proc() {
 
 	{ 	// Submatrix casting square matrices
 		// Casting a square matrix to another square matrix with same element type
-		// is supported. 
+		// is supported.
 		// If the cast is to a smaller matrix type, the top-left submatrix is taken.
 		// If the cast is to a larger matrix type, the matrix is extended with zeros
-		// everywhere and ones in the diagonal for the unfilled elements of the 
+		// everywhere and ones in the diagonal for the unfilled elements of the
 		// extended matrix.
 
 		mat2 :: distinct matrix[2, 2]f32
 		mat4 :: distinct matrix[4, 4]f32
 
-		m2 := mat2{1, 3, 2, 4}
+		m2 := mat2 {
+			1,
+			3,
+			2,
+			4,
+		}
 
 		m4 := mat4(m2)
 		assert(m4[2, 2] == 1)
@@ -2519,12 +2538,29 @@ matrix_type :: proc() {
 		fmt.println("mat2(m4)", mat2(m4))
 		assert(mat2(m4) == m2)
 
-		b4 := mat4{1, 2, 0, 0, 3, 4, 0, 0, 5, 0, 6, 0, 0, 7, 0, 8}
+		b4 := mat4 {
+			1,
+			2,
+			0,
+			0,
+			3,
+			4,
+			0,
+			0,
+			5,
+			0,
+			6,
+			0,
+			0,
+			7,
+			0,
+			8,
+		}
 		fmt.println("b4", matrix_flatten(b4))
 	}
 
 	{ 	// Casting non-square matrices
-		// Casting a matrix to another matrix is allowed as long as they share 
+		// Casting a matrix to another matrix is allowed as long as they share
 		// the same element type and the number of elements (rows*columns).
 		// Matrices in Odin are stored in column-major order, which means
 		// the casts will preserve this element order.
@@ -2532,7 +2568,16 @@ matrix_type :: proc() {
 		mat2x4 :: distinct matrix[2, 4]f32
 		mat4x2 :: distinct matrix[4, 2]f32
 
-		x := mat2x4{1, 3, 5, 7, 2, 4, 6, 8}
+		x := mat2x4 {
+			1,
+			3,
+			5,
+			7,
+			2,
+			4,
+			6,
+			8,
+		}
 
 		y := mat4x2(x)
 		fmt.println("x", x)
@@ -2542,16 +2587,16 @@ matrix_type :: proc() {
 	// TECHNICAL INFORMATION: the internal representation of a matrix in Odin is stored
 	// in column-major format
 	// e.g. matrix[2, 3]f32 is internally [3][2]f32 (with different a alignment requirement)
-	// Column-major is used in order to utilize (SIMD) vector instructions effectively on 
+	// Column-major is used in order to utilize (SIMD) vector instructions effectively on
 	// modern hardware, if possible.
 	//
 	// Unlike normal arrays, matrices try to maximize alignment to allow for the (SIMD) vectorization
 	// properties whilst keeping zero padding (either between columns or at the end of the type).
-	// 
+	//
 	// Zero padding is a compromise for use with third-party libraries, instead of optimizing for performance.
-	// Padding between columns was not taken even if that would have allowed each column to be loaded 
-	// individually into a SIMD register with the correct alignment properties. 
-	// 
+	// Padding between columns was not taken even if that would have allowed each column to be loaded
+	// individually into a SIMD register with the correct alignment properties.
+	//
 	// Currently, matrices are limited to a maximum of 16 elements (rows*columns), and a minimum of 1 element.
 	// This is because matrices are stored as values (not a reference type), and thus operations on them will
 	// be stored on the stack. Restricting the maximum element count minimizing the possibility of stack overflows.
